@@ -6,5 +6,6 @@ title: Home
 layout: single
 ---
 
-Welcome to my research page ! I'm Thibault Noël, PhD in robotics and currently looking for new opportunities as a robotics R&D engineer.
+Welcome to my research page ! I'm Thibault Noël, PhD in robotics.
 Here, you can find [a summary of my research work](/publications/), some technical [blog posts](/posts/) and [more info](/about/) about myself. 
+
