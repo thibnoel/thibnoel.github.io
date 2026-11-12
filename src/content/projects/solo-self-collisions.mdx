@@ -9,8 +9,10 @@ coverAlt: Rendering of the SOLO quadruped robot.
 skills:
   - legged robotics
   - collision avoidance
-  - data-driven models
-  - real-time control
+  - Pinocchio
+  - PyTorch
+  - Python
+  - C/C++
 publications:
   - solo_self_collisions
 featured: true
@@ -31,10 +33,11 @@ Two lightweight, conservative and smooth models are combined to handle self-coll
 
 - **Distant body pairs** (e.g. segments of distinct legs): forward kinematics on simplified geometries,
   with analytical derivatives.
-- **Body pairs moving close to one another**: a data-driven model of the collision distance.
+- **Body pairs moving close to one another**: a learned approximation of the collision distance in joint space.
 
 ## Results
 
-The models were integrated in an on-board safety controller on the SOLO quadruped and published at ICRA 2021.
+The models were integrated in an on-board safety controller, deployed in real time on the SOLO 12 robot, and
+published at ICRA 2021.
 
 <Video src="https://peertube.laas.fr/videos/embed/b6e911ee-728f-4337-a76e-8138a332b583" title="SOLO quadruped experiments" />

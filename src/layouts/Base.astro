@@ -50,7 +50,7 @@ const revision = new Date().toISOString().slice(0, 10);
         <p class="profile-name">{SITE.author.name}</p>
         <p class="profile-bio">{SITE.author.bio}</p>
         <ul>
-          <li class="label">{SITE.author.location} · {SITE.author.employer}</li>
+          <li class="label">{SITE.author.location}</li>
           <li><a href={`mailto:${SITE.author.email}`}>Email</a></li>
           {SITE.links.map((l) => <li><a href={l.href} rel="me">{l.label}</a></li>)}
         </ul>

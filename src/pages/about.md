@@ -8,6 +8,8 @@ I was born in 1997 in Paris. Since then, I moved around France and Europe during
 <img src="/assets/images/cities.png" alt="Map of the cities I lived in" width="65%" />
 
 ## Experience
+- **Aug. 2026 - Present**: **Robotics R&D Engineer** at **Kalgard Systems, Inria Startup Studio** - *Rennes & Sophia Antipolis, France*\
+Kalgard Systems is an early-stage startup developing a GNSS-denied localisation module for UAVs. I work on the architecture of the ROS 2 localisation stack, the georeferenced data tooling and the mechanical design of the second-generation prototype. More details on the [project page](/projects/kalgard-gnss-denied-uav/).
 - **Oct. 2021 - Jan. 2025**: **CIFRE PhD** at **Groupe Créative, Inria** - *Rennes, France*\
 In 2021, I joined [Groupe Créative](https://www.groupe-creative.fr/) and the Inria/IRISA [Rainbow team](https://team.inria.fr/rainbow/en/) to begin my PhD in the context of a CIFRE partnership. I worked on the topic of **Autonomous Exploration in Unknown 3D Environments**, focusing in particular on the planning and high-level decision aspects of exploration; I developed various planning methods and exploration strategies, deploying them in various simulated and real scenarios. The associated publications can be found under this site's [Publications](/publications/) page. This PhD work was successfully defended on January 24th 2025.
 - **Feb. 2021 - Oct. 2021**: **Pre-PhD engineering position** at **Inria** - *Rennes, France*

@@ -50,6 +50,8 @@ const projects = defineCollection({
       featured: z.boolean().default(false),
       // Ascending sort key for project lists.
       order: z.number(),
+      // Drafts render in `astro dev` but are excluded from production builds.
+      draft: z.boolean().default(false),
     }),
 });
 

@@ -1,14 +1,13 @@
 export const SITE = {
   title: 'Thibault Noël',
-  tagline: 'Robotics: motion planning and autonomous exploration',
+  tagline: 'Autonomous mobile robotics',
   description:
-    'Thibault Noël, PhD in robotics: motion planning, roadmaps and autonomous exploration of unknown environments.',
+    'Thibault Noël, robotics R&D engineer with a PhD in autonomous navigation: planning and exploration, simulation, ROS 2 architecture, CAD and integration.',
   author: {
     name: 'Thibault Noël',
-    bio: 'PhD in robotics',
+    bio: 'Robotics R&D engineer, PhD',
     avatar: '/images/mini_profile.png',
-    location: 'Rennes',
-    employer: 'Inria',
+    location: 'Rennes, France',
     email: 'thibault.noel@inria.fr',
   },
   links: [
