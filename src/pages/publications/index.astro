@@ -1,0 +1,30 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getPublications } from '../../lib/content';
+import { PUBLICATION_CATEGORIES, SITE } from '../../site';
+
+const publications = await getPublications();
+const groups = Object.entries(PUBLICATION_CATEGORIES)
+  .map(([key, heading]) => ({ heading, entries: publications.filter((p) => p.data.category === key) }))
+  .filter((g) => g.entries.length > 0);
+const scholar = SITE.links.find((l) => l.label === 'Google Scholar');
+---
+
+<Base title="Publications" description="Peer-reviewed publications and PhD manuscript of Thibault Noël.">
+  <h1>Publications</h1>
+  {scholar && <p>You can also find my articles on <a href={scholar.href}>my Google Scholar profile</a>.</p>}
+  {groups.map((g) => (
+    <section>
+      <h2>{g.heading}</h2>
+      <ul class="entry-list">
+        {g.entries.map((p) => (
+          <li>
+            <p class="meta"><span class="year">{p.data.date.getFullYear()}</span> {p.data.venue}</p>
+            <h3><a href={`/publications/${p.id}/`}>{p.data.title}</a></h3>
+            <p>{p.data.excerpt}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+</Base>

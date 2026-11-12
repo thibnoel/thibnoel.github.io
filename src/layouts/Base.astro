@@ -1,0 +1,70 @@
+---
+import Head from '../components/Head.astro';
+import { SITE } from '../site';
+import { getPosts } from '../lib/content';
+import '@fontsource/ibm-plex-sans/latin-400.css';
+import '@fontsource/ibm-plex-sans/latin-400-italic.css';
+import '@fontsource/ibm-plex-sans/latin-600.css';
+import '@fontsource/ibm-plex-mono/latin-400.css';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  type?: 'website' | 'article';
+}
+
+const hasPosts = (await getPosts()).length > 0;
+const nav = [
+  { label: 'About', href: '/about/' },
+  { label: 'Publications', href: '/publications/' },
+  ...(hasPosts ? [{ label: 'Posts', href: '/posts/' }] : []),
+  { label: 'Tools', href: '/tools/' },
+];
+const path = Astro.url.pathname;
+const revision = new Date().toISOString().slice(0, 10);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <Head {...Astro.props} />
+    <slot name="head" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="site-title" href="/">
+        <span class="site-name">{SITE.title}</span>
+        <span class="site-tagline">{SITE.tagline}</span>
+      </a>
+      <nav>
+        {nav.map((item) => (
+          <a href={item.href} aria-current={path.startsWith(item.href) ? 'page' : undefined}>{item.label}</a>
+        ))}
+      </nav>
+    </header>
+    <div class="layout frame">
+      <aside class="profile">
+        <img class="avatar" src={SITE.author.avatar} alt={SITE.author.name} width="140" height="140" />
+        <p class="profile-name">{SITE.author.name}</p>
+        <p class="profile-bio">{SITE.author.bio}</p>
+        <ul>
+          <li class="label">{SITE.author.location} · {SITE.author.employer}</li>
+          <li><a href={`mailto:${SITE.author.email}`}>Email</a></li>
+          {SITE.links.map((l) => <li><a href={l.href} rel="me">{l.label}</a></li>)}
+        </ul>
+      </aside>
+      <main>
+        <slot />
+      </main>
+    </div>
+    <footer class="site-footer">
+      <dl class="title-block">
+        <div><dt>Author</dt><dd>{SITE.author.name}</dd></div>
+        <div><dt>Location</dt><dd>48.11° N, 1.68° W</dd></div>
+        <div><dt>Rev.</dt><dd>{revision}</dd></div>
+        <div><dt>©</dt><dd>{revision.slice(0, 4)}</dd></div>
+      </dl>
+    </footer>
+  </body>
+</html>

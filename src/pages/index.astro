@@ -1,0 +1,23 @@
+---
+import Base from '../layouts/Base.astro';
+import { getPosts } from '../lib/content';
+
+const hasPosts = (await getPosts()).length > 0;
+---
+
+<Base>
+  <h1>Home</h1>
+  {hasPosts ? (
+    <p>
+      Welcome to my research page! I'm Thibault Noël, PhD in robotics. Here, you can find
+      <a href="/publications/">a summary of my research work</a>, some technical
+      <a href="/posts/">blog posts</a> and <a href="/about/">more info</a> about myself.
+    </p>
+  ) : (
+    <p>
+      Welcome to my research page! I'm Thibault Noël, PhD in robotics. Here, you can find
+      <a href="/publications/">a summary of my research work</a> and
+      <a href="/about/">more info</a> about myself.
+    </p>
+  )}
+</Base>
