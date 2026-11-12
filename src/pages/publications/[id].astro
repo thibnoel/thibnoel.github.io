@@ -2,7 +2,7 @@
 import type { GetStaticPaths } from 'astro';
 import { render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
-import { getPublications } from '../../lib/content';
+import { getProjectsForPublication, getPublications } from '../../lib/content';
 
 export const getStaticPaths = (async () => {
   const publications = await getPublications();
@@ -11,12 +11,18 @@ export const getStaticPaths = (async () => {
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
+const projects = await getProjectsForPublication(entry);
 ---
 
 <Base title={entry.data.title} description={entry.data.excerpt} type="article">
   <article class="prose">
     <p class="meta"><span class="year">{entry.data.date.getFullYear()}</span> {entry.data.venue}</p>
     <h1>{entry.data.title}</h1>
+    {projects.length > 0 && (
+      <p class="part-of label">
+        Part of {projects.map((p, i) => <>{i > 0 && ', '}<a href={`/projects/${p.id}/`}>{p.data.title}</a></>)}
+      </p>
+    )}
     <Content />
     <div class="citation">
       <p class="label">Recommended citation</p>

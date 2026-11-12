@@ -1,4 +1,4 @@
-import { defineCollection } from 'astro:content';
+import { defineCollection, reference } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 import { PUBLICATION_CATEGORIES } from './site';
@@ -33,4 +33,24 @@ const posts = defineCollection({
   }),
 });
 
-export const collections = { publications, posts };
+const projects = defineCollection({
+  loader: glob({ pattern: '**/*.mdx', base: './src/content/projects', generateId: byFileName }),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      // One line, shown on cards and as the page description.
+      summary: z.string(),
+      period: z.string(),
+      organisation: z.string(),
+      role: z.string(),
+      cover: image().optional(),
+      coverAlt: z.string().optional(),
+      skills: z.array(z.string()).default([]),
+      publications: z.array(reference('publications')).default([]),
+      featured: z.boolean().default(false),
+      // Ascending sort key for project lists.
+      order: z.number(),
+    }),
+});
+
+export const collections = { publications, posts, projects };

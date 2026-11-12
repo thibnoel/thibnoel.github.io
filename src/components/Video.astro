@@ -1,0 +1,17 @@
+---
+// Video embed for Markdown/MDX. Pass a YouTube id or a full embed URL (e.g. PeerTube).
+interface Props {
+  title: string;
+  youtube?: string;
+  src?: string;
+}
+
+const { title, youtube, src } = Astro.props;
+const url = youtube ? `https://www.youtube-nocookie.com/embed/${youtube}` : src;
+if (!url) throw new Error(`<Video title="${title}">: pass either \`youtube\` or \`src\`.`);
+---
+
+<figure class="video">
+  <iframe src={url} title={title} loading="lazy" allowfullscreen></iframe>
+  <figcaption class="label">{title}</figcaption>
+</figure>

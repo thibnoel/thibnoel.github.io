@@ -16,10 +16,11 @@ interface Props {
 
 const hasPosts = (await getPosts()).length > 0;
 const nav = [
-  { label: 'About', href: '/about/' },
+  { label: 'Projects', href: '/projects/' },
   { label: 'Publications', href: '/publications/' },
   ...(hasPosts ? [{ label: 'Posts', href: '/posts/' }] : []),
   { label: 'Tools', href: '/tools/' },
+  { label: 'About', href: '/about/' },
 ];
 const path = Astro.url.pathname;
 const revision = new Date().toISOString().slice(0, 10);

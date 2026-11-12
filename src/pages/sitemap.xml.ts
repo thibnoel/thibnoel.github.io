@@ -1,12 +1,14 @@
 import type { APIContext } from 'astro';
-import { getPosts, getPublications } from '../lib/content';
+import { getPosts, getProjects, getPublications } from '../lib/content';
 
 export async function GET(context: APIContext) {
-  const [publications, posts] = await Promise.all([getPublications(), getPosts()]);
+  const [projects, publications, posts] = await Promise.all([getProjects(), getPublications(), getPosts()]);
   const paths = [
     '/',
     '/about/',
     '/tools/',
+    '/projects/',
+    ...projects.map((p) => `/projects/${p.id}/`),
     '/publications/',
     ...publications.map((p) => `/publications/${p.id}/`),
     ...(posts.length > 0 ? ['/posts/', ...posts.map((p) => `/posts/${p.id}/`)] : []),

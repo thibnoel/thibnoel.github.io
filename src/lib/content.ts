@@ -1,4 +1,14 @@
-import { getCollection } from 'astro:content';
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+export async function getProjects() {
+  const entries = await getCollection('projects');
+  return entries.sort((a, b) => a.data.order - b.data.order);
+}
+
+export async function getProjectsForPublication(publication: CollectionEntry<'publications'>) {
+  const projects = await getProjects();
+  return projects.filter((p) => p.data.publications.some((ref) => ref.id === publication.id));
+}
 
 export async function getPublications() {
   const entries = await getCollection('publications');

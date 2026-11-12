@@ -1,23 +1,35 @@
 ---
 import Base from '../layouts/Base.astro';
-import { getPosts } from '../lib/content';
+import ProjectCard from '../components/ProjectCard.astro';
+import { getProjects, getPublications } from '../lib/content';
 
-const hasPosts = (await getPosts()).length > 0;
+const featured = (await getProjects()).filter((p) => p.data.featured);
+const recent = (await getPublications()).slice(0, 3);
 ---
 
 <Base>
-  <h1>Home</h1>
-  {hasPosts ? (
-    <p>
-      Welcome to my research page! I'm Thibault Noël, PhD in robotics. Here, you can find
-      <a href="/publications/">a summary of my research work</a>, some technical
-      <a href="/posts/">blog posts</a> and <a href="/about/">more info</a> about myself.
+  <section class="pitch">
+    <h1>Thibault Noël</h1>
+    <p class="lead">
+      Robotics engineer with a PhD from Inria (2025) on the autonomous exploration of unknown 3D environments.
+      My work covers motion planning, navigation roadmaps and exploration strategies, from algorithms to
+      deployment on real robots.
     </p>
-  ) : (
-    <p>
-      Welcome to my research page! I'm Thibault Noël, PhD in robotics. Here, you can find
-      <a href="/publications/">a summary of my research work</a> and
-      <a href="/about/">more info</a> about myself.
-    </p>
-  )}
+  </section>
+
+  <h2>Projects</h2>
+  <div class="card-grid">
+    {featured.map((project) => <ProjectCard project={project} />)}
+  </div>
+
+  <h2>Recent publications</h2>
+  <ul class="entry-list">
+    {recent.map((p) => (
+      <li>
+        <p class="meta"><span class="year">{p.data.date.getFullYear()}</span> {p.data.venue}</p>
+        <h3><a href={`/publications/${p.id}/`}>{p.data.title}</a></h3>
+      </li>
+    ))}
+  </ul>
+  <p class="more"><a href="/publications/">All publications →</a></p>
 </Base>

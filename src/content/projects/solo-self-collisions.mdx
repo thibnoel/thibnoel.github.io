@@ -1,0 +1,40 @@
+---
+title: Self-collision avoidance for the SOLO quadruped
+summary: Lightweight, smooth self-collision models combining geometric primitives and learned distances, running in an on-board safety controller.
+period: '2020'
+organisation: LAAS-CNRS
+role: MSc research intern, Gepetto team
+cover: ../../assets/projects/solo-quadruped.jpg
+coverAlt: Rendering of the SOLO quadruped robot.
+skills:
+  - legged robotics
+  - collision avoidance
+  - data-driven models
+  - real-time control
+publications:
+  - solo_self_collisions
+featured: true
+order: 2
+---
+
+import Video from '../../components/Video.astro';
+
+## Problem
+
+Self-collision detection and avoidance are essential for reactive control of dynamic robots with legs or arms.
+Few control methods handle these constraints directly, so collision-free trajectories are often left to a
+planner upstream of the controller.
+
+## Approach
+
+Two lightweight, conservative and smooth models are combined to handle self-collisions generically:
+
+- **Distant body pairs** (e.g. segments of distinct legs): forward kinematics on simplified geometries,
+  with analytical derivatives.
+- **Body pairs moving close to one another**: a data-driven model of the collision distance.
+
+## Results
+
+The models were integrated in an on-board safety controller on the SOLO quadruped and published at ICRA 2021.
+
+<Video src="https://peertube.laas.fr/videos/embed/b6e911ee-728f-4337-a76e-8138a332b583" title="SOLO quadruped experiments" />

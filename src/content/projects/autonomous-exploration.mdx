@@ -1,0 +1,62 @@
+---
+title: Autonomous exploration of unknown 3D environments
+summary: PhD work on the planning side of robotic exploration, from safe and sparse navigation roadmaps to exploration strategies deployed on a ground robot.
+period: 2021 – 2025
+organisation: Inria Rennes × Groupe Créative
+role: CIFRE PhD candidate
+cover: ../../assets/projects/exploration-roadmaps.jpg
+coverAlt: Two navigation roadmaps over the same occupancy map; left, a dense graph of free-space disks; right, the sparse skeleton-based roadmap.
+skills:
+  - path planning
+  - autonomous exploration
+  - navigation roadmaps
+  - signed distance fields
+  - mobile robotics
+publications:
+  - sdgrm
+  - dgprm
+  - phd_manuscript
+featured: true
+order: 1
+---
+
+import Video from '../../components/Video.astro';
+
+## Problem
+
+Exploration means maximising the information gained about an unknown environment, usually while limiting
+the energy spent doing it. Past sensor observations and future actions are tightly coupled: what the robot
+has already seen dictates where it should go next. The coupling is even stronger with directional sensors
+such as cameras, whose observations depend heavily on the robot's pose.
+
+## Approach
+
+Standard mapping algorithms provide the geometric representation of the environment. The core of the work
+exploits that map to derive navigation roadmaps and exploration strategies that respect the safety
+requirements imposed by the environment, while still producing high-quality observations with directional
+sensors.
+
+### Disk-Graph Probabilistic Roadmap
+
+A sampling-based planner whose nodes are free-space bubbles. A biased sampling function expands the graph
+towards known free space and frontiers, giving an RRT-like exploratory behaviour while keeping the
+connectivity and flexibility of a graph.
+
+<Video youtube="uQPAflqvXxo" title="Disk-Graph Probabilistic Roadmap (IROS 2022)" />
+
+### Skeleton Disk-Graph Roadmap
+
+A deterministic roadmap built from the Hamilton-Jacobi skeleton of the free space. The skeleton is compressed
+into a sparse graph of free-space bubbles that keeps its topology, and the bubbles enforce safety directly in
+the roadmap structure. A frontier-based exploration strategy built on top of it autonomously and safely maps
+complete 2D environments.
+
+<Video youtube="T-aOIx6_-ts" title="Skeleton Disk-Graph Roadmap (RA-L 2023)" />
+
+## Results
+
+The methods were evaluated extensively in realistic simulation environments, then deployed on a ground mobile
+robot with various range sensors in multiple real-world experiments. The full work is described in the PhD
+manuscript, defended in January 2025.
+
+<Video youtube="nihoO_knoOc" title="PhD defense recording" />

@@ -1,0 +1,14 @@
+---
+import Base from '../../layouts/Base.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { getProjects } from '../../lib/content';
+
+const projects = await getProjects();
+---
+
+<Base title="Projects" description="Robotics projects by Thibault Noël: autonomous exploration, legged robot safety, space robotics simulation.">
+  <h1>Projects</h1>
+  <div class="card-grid">
+    {projects.map((project) => <ProjectCard project={project} />)}
+  </div>
+</Base>
