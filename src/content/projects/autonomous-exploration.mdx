@@ -21,6 +21,7 @@ order: 1
 ---
 
 import Video from '../../components/Video.astro';
+import SdgrmDemo from '../../components/demos/sdgrm/SdgrmDemo.astro';
 
 ## Problem
 
@@ -50,6 +51,11 @@ A deterministic roadmap built from the Hamilton-Jacobi skeleton of the free spac
 into a sparse graph of free-space bubbles that keeps its topology, and the bubbles enforce safety directly in
 the roadmap structure. A frontier-based exploration strategy built on top of it autonomously and safely maps
 complete 2D environments.
+
+Try it below: the roadmap is rebuilt in your browser from the occupancy map. Click to move the goal (drag the
+**S** marker to move the start), or draw and erase walls to see the skeleton and the bubbles adapt.
+
+<SdgrmDemo />
 
 <Video youtube="T-aOIx6_-ts" title="Skeleton Disk-Graph Roadmap (RA-L 2023)" />
 

@@ -1,0 +1,206 @@
+---
+// Interactive Skeleton Disk-Graph Roadmap demo. Computation runs in a web worker, started when the demo scrolls into view.
+const id = 'sdgrm';
+---
+
+<figure class="demo frame" data-sdgrm>
+  <div class="demo-bar">
+    <fieldset class="demo-tools">
+      <legend class="label">Tool</legend>
+      <label><input type="radio" name={`${id}-tool`} value="plan" checked /> Plan path</label>
+      <label><input type="radio" name={`${id}-tool`} value="draw" /> Draw walls</label>
+      <label><input type="radio" name={`${id}-tool`} value="erase" /> Erase</label>
+    </fieldset>
+    <fieldset class="demo-layers">
+      <legend class="label">Layers</legend>
+      <label><input type="checkbox" data-layer="isolines" checked /> <span class="swatch swatch-iso"></span>Distance</label>
+      <label><input type="checkbox" data-layer="skeleton" checked /> <span class="swatch swatch-skel"></span>Skeleton</label>
+      <label><input type="checkbox" data-layer="bubbles" checked /> <span class="swatch swatch-bubble"></span>Bubbles</label>
+      <label><input type="checkbox" data-layer="graph" checked /> <span class="swatch swatch-graph"></span>Graph</label>
+    </fieldset>
+  </div>
+  <div class="demo-stage">
+    <canvas
+      data-tool="plan"
+      aria-label="Occupancy map of the Intel Research Lab with the skeleton disk-graph roadmap overlaid. Click to move the goal, drag the start marker, or draw walls to update the roadmap."
+    ></canvas>
+    <p class="demo-status label" data-status>Loading…</p>
+  </div>
+  <div class="demo-bar">
+    <label class="demo-slider">
+      <span class="label">Min. junction radius</span>
+      <input id={`${id}-jrad`} type="range" min="0.3" max="1.5" step="0.1" value="0.6" data-param="minJunctionRadius" />
+      <output for={`${id}-jrad`}>0.6 m</output>
+    </label>
+    <label class="demo-slider">
+      <span class="label">Min. bubble radius</span>
+      <input id={`${id}-brad`} type="range" min="0.2" max="1.0" step="0.1" value="0.4" data-param="minBubbleRadius" />
+      <output for={`${id}-brad`}>0.4 m</output>
+    </label>
+    <div class="demo-actions">
+      <button type="button" data-action="reset">Reset map</button>
+      <button type="button" data-action="clear">Clear map</button>
+    </div>
+  </div>
+  <figcaption class="demo-caption">
+    <span class="label" data-stats></span>
+    <span class="label">Map: Intel Research Lab (Radish dataset), 0.1 m/cell</span>
+  </figcaption>
+</figure>
+
+<script>
+  import { mountSdgrmDemo } from './client';
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        observer.unobserve(entry.target);
+        mountSdgrmDemo(entry.target as HTMLElement).catch((error) => {
+          const status = entry.target.querySelector('[data-status]');
+          if (status) status.textContent = 'The demo failed to load.';
+          console.error(error);
+        });
+      }
+    },
+    { rootMargin: '200px' },
+  );
+  document.querySelectorAll<HTMLElement>('[data-sdgrm]').forEach((el) => observer.observe(el));
+</script>
+
+<style>
+  .demo {
+    margin: 1.5rem 0 2rem;
+    padding: 0;
+  }
+  .demo-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+    align-items: end;
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+  }
+  .demo-bar:first-child {
+    border-bottom: 1px solid var(--line);
+  }
+  .demo-bar:nth-child(3) {
+    border-top: 1px solid var(--line);
+  }
+  fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.9rem;
+  }
+  legend {
+    float: left;
+    width: 100%;
+    margin-bottom: 0.25rem;
+  }
+  label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    cursor: pointer;
+  }
+  input[type='radio'],
+  input[type='checkbox'],
+  input[type='range'] {
+    accent-color: var(--accent);
+    margin: 0;
+  }
+  .swatch {
+    display: inline-block;
+    width: 0.9rem;
+    height: 0;
+    border-top: 2px solid;
+  }
+  .swatch-iso {
+    border-color: var(--muted);
+    border-top-style: dotted;
+  }
+  .swatch-skel {
+    border-color: var(--accent);
+  }
+  .swatch-bubble {
+    width: 0.7rem;
+    height: 0.7rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+  }
+  .swatch-graph {
+    border-color: var(--fg);
+    border-top-width: 1px;
+  }
+  .demo-stage {
+    position: relative;
+  }
+  canvas {
+    display: block;
+    width: 100%;
+    touch-action: none;
+    cursor: crosshair;
+  }
+  canvas[data-tool='draw'],
+  canvas[data-tool='erase'] {
+    cursor: cell;
+  }
+  .demo-status {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    margin: 0;
+    padding: 0.15rem 0.5rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+  }
+  .demo-status:empty {
+    display: none;
+  }
+  .demo-slider {
+    display: grid;
+    grid-template-columns: auto auto;
+    column-gap: 0.6rem;
+    cursor: default;
+  }
+  .demo-slider .label {
+    grid-column: 1 / -1;
+  }
+  output {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    min-width: 3.5em;
+  }
+  .demo-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-left: auto;
+  }
+  button {
+    font: inherit;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--fg);
+    background: var(--surface);
+    border: 1px solid var(--line-strong);
+    padding: 0.3rem 0.7rem;
+    cursor: pointer;
+  }
+  button:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .demo-caption {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.25rem 1rem;
+    padding: 0.5rem 1rem;
+    border-top: 1px solid var(--line);
+  }
+</style>
