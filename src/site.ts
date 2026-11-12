@@ -7,7 +7,6 @@ export const SITE = {
     name: 'Thibault Noël',
     bio: 'Robotics R&D engineer, PhD',
     avatar: '/images/mini_profile.png',
-    location: 'Rennes, France',
     email: 'thibault.noel@inria.fr',
   },
   links: [

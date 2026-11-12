@@ -3,6 +3,8 @@ title: About
 layout: ../layouts/Page.astro
 ---
 
+<img class="avatar" src="/images/mini_profile.png" alt="Thibault Noël" width="140" height="140" />
+
 ## Bio
 I was born in 1997 in Paris. Since then, I moved around France and Europe during my studies, spending some time in Toulouse, Berlin, Brussels and Rennes where I'm currently working.
 <img src="/assets/images/cities.png" alt="Map of the cities I lived in" width="65%" />

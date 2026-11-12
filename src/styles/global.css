@@ -66,25 +66,30 @@ a:hover { color: var(--accent); text-decoration-color: currentColor; }
 }
 .label { text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
 
-/* Header */
+/* Header: a framed strip, nav links as cells divided by hairlines. */
 .site-header {
-  max-width: var(--max);
-  margin: 0 auto;
-  padding: 2rem 1.5rem 1.25rem;
+  max-width: calc(var(--max) - 3rem);
+  margin: 1.5rem auto 1rem;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  align-items: end;
-  gap: 1rem 2rem;
 }
-.site-title { text-decoration: none; display: grid; }
+.site-title { text-decoration: none; display: grid; padding: 0.85rem 1.5rem; }
 .site-title:hover { color: inherit; }
 .site-name { font-weight: 600; font-size: 1.3rem; letter-spacing: -0.01em; }
 .site-tagline { color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
-.site-header nav { display: flex; flex-wrap: wrap; gap: 1.5rem; text-transform: uppercase; letter-spacing: 0.08em; }
-.site-header nav a { text-decoration: none; color: var(--muted); padding-bottom: 0.2rem; border-bottom: 1px solid transparent; }
-.site-header nav a:hover { color: var(--fg); }
-.site-header nav a[aria-current='page'] { color: var(--fg); border-bottom-color: var(--accent); }
+.site-header nav { display: flex; text-transform: uppercase; letter-spacing: 0.08em; }
+.site-header nav a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 1.25rem;
+  border-left: 1px solid var(--line);
+  text-decoration: none;
+  color: var(--muted);
+}
+.site-header nav a:hover { color: var(--fg); background: var(--bg); }
+.site-header nav a[aria-current='page'] { color: var(--fg); box-shadow: inset 0 -2px var(--accent); }
 
 /* Framed sheet with corner registration marks. */
 .frame {
@@ -109,15 +114,20 @@ a:hover { color: var(--accent); text-decoration-color: currentColor; }
   margin: 0 auto;
   display: grid;
   grid-template-columns: 15rem minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
 }
 
+/* Title strip at the top of a box, like a drawing-block label. */
+.box-tag { margin: 0; padding: 0.35rem 1.5rem; border-bottom: 1px solid var(--line); }
+
 /* Sidebar */
-.profile {
-  padding: 2rem 1.5rem;
-  border-right: 1px solid var(--line);
-  font-size: 0.9rem;
-}
-.avatar {
+.profile { font-size: 0.9rem; }
+.profile ul { list-style: none; padding: 1rem 1.5rem 1.25rem; margin: 0; }
+.profile li { margin: 0.25rem 0; }
+
+/* Portrait, shown on the About page only. */
+.prose .avatar {
   display: block;
   width: 140px;
   height: 140px;
@@ -128,37 +138,20 @@ a:hover { color: var(--accent); text-decoration-color: currentColor; }
   background: var(--surface);
   transition: filter 200ms;
 }
-.avatar:hover { filter: none; }
-.profile-name { font-weight: 600; font-size: 1.05rem; margin: 1rem 0 0; }
-.profile-bio { color: var(--muted); margin: 0 0 1rem; }
-.profile ul {
-  list-style: none;
-  padding: 1rem 0 0;
-  margin: 0;
-  border-top: 1px dashed var(--line);
-}
-.profile li { margin: 0.25rem 0; }
-.profile li.label { margin-bottom: 0.6rem; }
+.prose .avatar:hover { filter: none; }
 
-main { min-width: 0; padding: 2.25rem 2.5rem 3rem; }
+main { min-width: 0; }
+.sheet-body { padding: 2.25rem 2.5rem 3rem; }
 
 @media (max-width: 52rem) {
-  .layout { grid-template-columns: 1fr; margin: 0 0.75rem; }
-  .profile {
-    border-right: 0;
-    border-bottom: 1px solid var(--line);
-    display: grid;
-    grid-template-columns: auto 1fr;
-    column-gap: 1rem;
-    align-items: center;
-    padding: 1.25rem;
-  }
-  .avatar { width: 84px; height: 84px; grid-row: span 2; }
-  .profile-name { margin: 0; align-self: end; }
-  .profile-bio { margin: 0; align-self: start; }
-  .profile ul { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 0 1rem; margin-top: 1rem; }
-  .profile li.label { flex-basis: 100%; margin-bottom: 0.25rem; }
-  main { padding: 1.5rem 1.25rem 2.5rem; }
+  .site-header { flex-direction: column; margin: 1rem 0.75rem 0.75rem; }
+  .site-header nav { border-top: 1px solid var(--line); }
+  .site-header nav a { flex: 1; padding: 0.6rem 0.25rem; }
+  .site-header nav a:first-child { border-left: 0; }
+  .layout { grid-template-columns: 1fr; gap: 0.75rem; margin: 0 0.75rem; }
+  .box-tag { padding: 0.35rem 1.25rem; }
+  .profile ul { display: flex; flex-wrap: wrap; gap: 0 1rem; padding: 0.75rem 1.25rem; }
+  .sheet-body { padding: 1.5rem 1.25rem 2.5rem; }
 }
 
 /* Typography */
@@ -322,14 +315,11 @@ hr { border: 0; border-top: 1px dashed var(--line); margin: 2rem 0; }
 .video figcaption { margin-top: 0.4rem; }
 
 /* Footer drawn as a technical-drawing title block. */
-.site-footer { max-width: calc(var(--max) - 3rem); margin: 1.5rem auto 2.5rem; }
+.site-footer { max-width: calc(var(--max) - 3rem); margin: 1rem auto 2.5rem; }
 .title-block {
   display: grid;
-  grid-template-columns: 2fr 2fr 1fr 1fr;
-  margin: 0 0 0 auto;
-  max-width: 40rem;
-  border: 1px solid var(--line-strong);
-  background: var(--surface);
+  grid-template-columns: 2fr 2fr 1fr 1fr 1fr;
+  margin: 0;
 }
 .title-block div { padding: 0.4rem 0.75rem; border-left: 1px solid var(--line); }
 .title-block div:first-child { border-left: 0; }
@@ -337,8 +327,9 @@ hr { border: 0; border-top: 1px dashed var(--line); margin: 2rem 0; }
 .title-block dd { margin: 0; }
 
 @media (max-width: 52rem) {
-  .site-footer { margin: 1rem 0.75rem 2rem; }
-  .title-block { grid-template-columns: 1fr 1fr; max-width: none; }
-  .title-block div:nth-child(3) { border-left: 0; }
+  .site-footer { margin: 0.75rem 0.75rem 2rem; }
+  .title-block { grid-template-columns: 1fr 1fr; }
+  .title-block div:nth-child(odd) { border-left: 0; }
   .title-block div:nth-child(n + 3) { border-top: 1px solid var(--line); }
+  .title-block div:last-child { grid-column: 1 / -1; }
 }

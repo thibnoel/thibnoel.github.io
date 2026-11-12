@@ -24,6 +24,10 @@ const nav = [
 ];
 const path = Astro.url.pathname;
 const revision = new Date().toISOString().slice(0, 10);
+// Each top-level section is a "sheet" of the drawing set; detail pages belong to their section's sheet.
+const sheets = [{ label: 'Home', href: '/' }, ...nav];
+const sheetIndex = sheets.findIndex((s) => (s.href === '/' ? path === '/' : path.startsWith(s.href)));
+const sheet = sheets[sheetIndex];
 ---
 
 <!doctype html>
@@ -33,7 +37,7 @@ const revision = new Date().toISOString().slice(0, 10);
     <slot name="head" />
   </head>
   <body>
-    <header class="site-header">
+    <header class="site-header frame">
       <a class="site-title" href="/">
         <span class="site-name">{SITE.title}</span>
         <span class="site-tagline">{SITE.tagline}</span>
@@ -44,25 +48,26 @@ const revision = new Date().toISOString().slice(0, 10);
         ))}
       </nav>
     </header>
-    <div class="layout frame">
-      <aside class="profile">
-        <img class="avatar" src={SITE.author.avatar} alt={SITE.author.name} width="140" height="140" />
-        <p class="profile-name">{SITE.author.name}</p>
-        <p class="profile-bio">{SITE.author.bio}</p>
+    <div class="layout">
+      <aside class="profile frame">
+        <p class="box-tag label">Links</p>
         <ul>
-          <li class="label">{SITE.author.location}</li>
           <li><a href={`mailto:${SITE.author.email}`}>Email</a></li>
           {SITE.links.map((l) => <li><a href={l.href} rel="me">{l.label}</a></li>)}
         </ul>
       </aside>
-      <main>
-        <slot />
+      <main class="frame">
+        <p class="box-tag label">{path}</p>
+        <div class="sheet-body">
+          <slot />
+        </div>
       </main>
     </div>
     <footer class="site-footer">
-      <dl class="title-block">
+      <dl class="title-block frame">
         <div><dt>Author</dt><dd>{SITE.author.name}</dd></div>
-        <div><dt>Location</dt><dd>48.11° N, 1.68° W</dd></div>
+        <div><dt>Sheet</dt><dd>{sheet?.label ?? Astro.props.title ?? '—'}</dd></div>
+        <div><dt>Sheet no.</dt><dd>{sheet ? `${sheetIndex + 1} / ${sheets.length}` : '—'}</dd></div>
         <div><dt>Rev.</dt><dd>{revision}</dd></div>
         <div><dt>©</dt><dd>{revision.slice(0, 4)}</dd></div>
       </dl>
