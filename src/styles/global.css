@@ -9,6 +9,7 @@
   --grid: rgb(0 0 0 / 0.045);
   --accent: #2c7a4b;
   --accent-soft: rgb(44 122 75 / 0.35);
+  --danger: #b5432f;
 
   --sans: 'IBM Plex Sans', system-ui, sans-serif;
   --mono: 'IBM Plex Mono', ui-monospace, monospace;
@@ -28,6 +29,7 @@
     --grid: rgb(255 255 255 / 0.035);
     --accent: #62bd87;
     --accent-soft: rgb(98 189 135 / 0.4);
+    --danger: #e07a64;
   }
 }
 

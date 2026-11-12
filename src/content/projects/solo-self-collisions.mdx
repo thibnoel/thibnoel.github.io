@@ -20,6 +20,7 @@ order: 2
 ---
 
 import Video from '../../components/Video.astro';
+import SoloLegsDemo from '../../components/demos/solo/SoloLegsDemo.astro';
 
 ## Problem
 
@@ -34,6 +35,16 @@ Two lightweight, conservative and smooth models are combined to handle self-coll
 - **Distant body pairs** (e.g. segments of distinct legs): forward kinematics on simplified geometries,
   with analytical derivatives.
 - **Body pairs moving close to one another**: a learned approximation of the collision distance in joint space.
+
+The demo below reduces the problem to the first case: the front and hind left legs of SOLO, seen from the side
+as two 2-DoF planar chains of capsules. The distance between each pair of segments from distinct legs and its
+gradient with respect to the joints are computed analytically. Below an activation distance $d_0$, a repulsive
+spring–damper on each pair distance $d$ is mapped to joint torques,
+$\tau = \sum \max\big(0,\ k(d_0 - d) - b\,\dot d\big)\, \nabla_q d$, and added to the joint PD controller
+tracking the reference. Toggle the safety controller to see the reference motion drive the legs through each other.
+For simplicity, each joint is simulated as an independent damped inertia, without gravity.
+
+<SoloLegsDemo />
 
 ## Results
 

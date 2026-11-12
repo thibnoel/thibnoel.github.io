@@ -1,3 +1,5 @@
+import { resolveColor, rgba } from '../colors';
+import { DEFAULT_CAVE_PARAMS, DEFAULT_MAZE_PARAMS, generateCave, generateMaze } from '../maps/procedural';
 import intellabUrl from './maps/intellab.png?url';
 import {
   DEFAULT_MAP_PARAMS,
@@ -14,6 +16,15 @@ import type { ComputeRequest, ComputeResponse } from './worker';
 
 type Tool = 'plan' | 'draw' | 'erase';
 type Point = [number, number];
+
+interface DemoMap {
+  width: number;
+  height: number;
+  occupancy: Uint8Array;
+  start: Point;
+  goal: Point;
+  label: string;
+}
 
 interface State {
   width: number;
@@ -61,32 +72,45 @@ async function loadOccupancy(url: string) {
   return { width: canvas.width, height: canvas.height, occupancy };
 }
 
-/** Resolves a CSS color (including custom properties) to RGB components. */
-function resolveColor(root: HTMLElement, variable: string): [number, number, number] {
-  const probe = document.createElement('canvas').getContext('2d')!;
-  probe.fillStyle = getComputedStyle(root).getPropertyValue(variable).trim() || '#000';
-  probe.fillRect(0, 0, 1, 1);
-  const [r, g, b] = probe.getImageData(0, 0, 1, 1).data;
-  return [r, g, b];
-}
-
 export async function mountSdgrmDemo(root: HTMLElement) {
   const canvas = root.querySelector<HTMLCanvasElement>('canvas')!;
   const status = root.querySelector<HTMLElement>('[data-status]')!;
   const stats = root.querySelector<HTMLElement>('[data-stats]')!;
   const ctx = canvas.getContext('2d')!;
 
-  const map = await loadOccupancy(intellabUrl);
+  const mapLabel = root.querySelector<HTMLElement>('[data-map-label]')!;
+
+  const intelLab: DemoMap = {
+    ...(await loadOccupancy(intellabUrl)),
+    start: [10, 13],
+    goal: [46, 50],
+    label: `Map: Intel Research Lab (Radish dataset), ${RES} m/cell`,
+  };
+
+  type ProceduralKind = 'maze' | 'cave';
+  const seeds: Record<ProceduralKind, number> = { maze: 1, cave: 1 };
+  function procedural(kind: ProceduralKind): DemoMap {
+    const seed = seeds[kind];
+    const map =
+      kind === 'maze'
+        ? generateMaze({ ...DEFAULT_MAZE_PARAMS, resolution: RES, seed })
+        : generateCave({ ...DEFAULT_CAVE_PARAMS, resolution: RES, seed });
+    return { ...map, label: `Map: procedural ${kind} (seed ${seed}), ${RES} m/cell` };
+  }
+
+  // Map fields are filled by setMap() before the first render.
   const state: State = {
-    ...map,
-    initialOccupancy: map.occupancy.slice(),
+    width: 0,
+    height: 0,
+    occupancy: new Uint8Array(0),
+    initialOccupancy: new Uint8Array(0),
     grid: null,
     skeleton: null,
     roadmap: null,
     path: null,
     smoothed: null,
-    start: [10, 13],
-    goal: [46, 50],
+    start: [0, 0],
+    goal: [0, 0],
     tool: 'plan',
     layers: { isolines: true, skeleton: true, bubbles: true, graph: true },
     roadmapParams: { ...DEFAULT_ROADMAP_PARAMS },
@@ -94,10 +118,7 @@ export async function mountSdgrmDemo(root: HTMLElement) {
   };
 
   const raster = document.createElement('canvas');
-  raster.width = state.width;
-  raster.height = state.height;
   const rasterCtx = raster.getContext('2d')!;
-  canvas.style.aspectRatio = `${state.width} / ${state.height}`;
 
   // --- Rendering -----------------------------------------------------------
 
@@ -110,7 +131,6 @@ export async function mountSdgrmDemo(root: HTMLElement) {
       accent: resolveColor(root, '--accent'),
     };
   }
-  const rgba = ([r, g, b]: [number, number, number], a: number) => `rgba(${r}, ${g}, ${b}, ${a})`;
 
   function renderRaster() {
     const image = rasterCtx.createImageData(state.width, state.height);
@@ -302,6 +322,30 @@ export async function mountSdgrmDemo(root: HTMLElement) {
     stats.textContent = `${stats.dataset.compute ?? ''} · ${path}`;
   }
 
+  function setMap(map: DemoMap) {
+    Object.assign(state, {
+      width: map.width,
+      height: map.height,
+      occupancy: map.occupancy.slice(),
+      initialOccupancy: map.occupancy,
+      grid: null,
+      skeleton: null,
+      roadmap: null,
+      path: null,
+      smoothed: null,
+      start: map.start,
+      goal: map.goal,
+    });
+    raster.width = map.width;
+    raster.height = map.height;
+    canvas.style.aspectRatio = `${map.width} / ${map.height}`;
+    mapLabel.textContent = map.label;
+    stats.textContent = '';
+    renderRaster();
+    resize();
+    requestCompute();
+  }
+
   // --- Interaction ---------------------------------------------------------
 
   function eventToWorld(event: PointerEvent): Point {
@@ -408,7 +452,22 @@ export async function mountSdgrmDemo(root: HTMLElement) {
     requestCompute();
   });
 
-  renderRaster();
-  resize();
-  requestCompute();
+  const mapInputs = root.querySelectorAll<HTMLInputElement>('input[name$="-map"]');
+  const regenerate = root.querySelector<HTMLButtonElement>('[data-action="regenerate"]')!;
+  const selectedKind = () => [...mapInputs].find((input) => input.checked)!.value as ProceduralKind | 'intellab';
+  mapInputs.forEach((input) => {
+    input.addEventListener('change', () => {
+      const kind = selectedKind();
+      regenerate.disabled = kind === 'intellab';
+      setMap(kind === 'intellab' ? intelLab : procedural(kind));
+    });
+  });
+  regenerate.addEventListener('click', () => {
+    const kind = selectedKind();
+    if (kind === 'intellab') return;
+    seeds[kind] = 1 + Math.floor(Math.random() * 99999);
+    setMap(procedural(kind));
+  });
+
+  setMap(intelLab);
 }

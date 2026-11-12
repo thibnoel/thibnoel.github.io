@@ -1,10 +1,18 @@
 ---
 // Interactive Skeleton Disk-Graph Roadmap demo. Computation runs in a web worker, started when the demo scrolls into view.
+import Demo from '../Demo.astro';
+
 const id = 'sdgrm';
 ---
 
-<figure class="demo frame" data-sdgrm>
+<Demo data-demo={id}>
   <div class="demo-bar">
+    <fieldset>
+      <legend class="label">Map</legend>
+      <label><input type="radio" name={`${id}-map`} value="intellab" checked /> Intel Lab</label>
+      <label><input type="radio" name={`${id}-map`} value="maze" /> Maze</label>
+      <label><input type="radio" name={`${id}-map`} value="cave" /> Cave</label>
+    </fieldset>
     <fieldset class="demo-tools">
       <legend class="label">Tool</legend>
       <label><input type="radio" name={`${id}-tool`} value="plan" checked /> Plan path</label>
@@ -22,7 +30,7 @@ const id = 'sdgrm';
   <div class="demo-stage">
     <canvas
       data-tool="plan"
-      aria-label="Occupancy map of the Intel Research Lab with the skeleton disk-graph roadmap overlaid. Click to move the goal, drag the start marker, or draw walls to update the roadmap."
+      aria-label="Occupancy map with the skeleton disk-graph roadmap overlaid. Click to move the goal, drag the start marker, or draw walls to update the roadmap."
     ></canvas>
     <p class="demo-status label" data-status>Loading…</p>
   </div>
@@ -38,80 +46,25 @@ const id = 'sdgrm';
       <output for={`${id}-brad`}>0.4 m</output>
     </label>
     <div class="demo-actions">
+      <button type="button" data-action="regenerate" disabled>New map</button>
       <button type="button" data-action="reset">Reset map</button>
       <button type="button" data-action="clear">Clear map</button>
     </div>
   </div>
   <figcaption class="demo-caption">
     <span class="label" data-stats></span>
-    <span class="label">Map: Intel Research Lab (Radish dataset), 0.1 m/cell</span>
+    <span class="label" data-map-label></span>
   </figcaption>
-</figure>
+</Demo>
 
 <script>
+  import { mountWhenVisible } from '../mountWhenVisible';
   import { mountSdgrmDemo } from './client';
 
-  const observer = new IntersectionObserver(
-    (entries) => {
-      for (const entry of entries) {
-        if (!entry.isIntersecting) continue;
-        observer.unobserve(entry.target);
-        mountSdgrmDemo(entry.target as HTMLElement).catch((error) => {
-          const status = entry.target.querySelector('[data-status]');
-          if (status) status.textContent = 'The demo failed to load.';
-          console.error(error);
-        });
-      }
-    },
-    { rootMargin: '200px' },
-  );
-  document.querySelectorAll<HTMLElement>('[data-sdgrm]').forEach((el) => observer.observe(el));
+  mountWhenVisible('[data-demo="sdgrm"]', mountSdgrmDemo);
 </script>
 
 <style>
-  .demo {
-    margin: 1.5rem 0 2rem;
-    padding: 0;
-  }
-  .demo-bar {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem 1.5rem;
-    align-items: end;
-    padding: 0.75rem 1rem;
-    font-size: 0.85rem;
-  }
-  .demo-bar:first-child {
-    border-bottom: 1px solid var(--line);
-  }
-  .demo-bar:nth-child(3) {
-    border-top: 1px solid var(--line);
-  }
-  fieldset {
-    border: 0;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.25rem 0.9rem;
-  }
-  legend {
-    float: left;
-    width: 100%;
-    margin-bottom: 0.25rem;
-  }
-  label {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    cursor: pointer;
-  }
-  input[type='radio'],
-  input[type='checkbox'],
-  input[type='range'] {
-    accent-color: var(--accent);
-    margin: 0;
-  }
   .swatch {
     display: inline-block;
     width: 0.9rem;
@@ -135,72 +88,11 @@ const id = 'sdgrm';
     border-color: var(--fg);
     border-top-width: 1px;
   }
-  .demo-stage {
-    position: relative;
-  }
   canvas {
-    display: block;
-    width: 100%;
-    touch-action: none;
     cursor: crosshair;
   }
   canvas[data-tool='draw'],
   canvas[data-tool='erase'] {
     cursor: cell;
-  }
-  .demo-status {
-    position: absolute;
-    top: 0.75rem;
-    left: 0.75rem;
-    margin: 0;
-    padding: 0.15rem 0.5rem;
-    background: var(--surface);
-    border: 1px solid var(--line);
-  }
-  .demo-status:empty {
-    display: none;
-  }
-  .demo-slider {
-    display: grid;
-    grid-template-columns: auto auto;
-    column-gap: 0.6rem;
-    cursor: default;
-  }
-  .demo-slider .label {
-    grid-column: 1 / -1;
-  }
-  output {
-    font-family: var(--mono);
-    font-size: 0.8rem;
-    min-width: 3.5em;
-  }
-  .demo-actions {
-    display: flex;
-    gap: 0.5rem;
-    margin-left: auto;
-  }
-  button {
-    font: inherit;
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--fg);
-    background: var(--surface);
-    border: 1px solid var(--line-strong);
-    padding: 0.3rem 0.7rem;
-    cursor: pointer;
-  }
-  button:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-  }
-  .demo-caption {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 0.25rem 1rem;
-    padding: 0.5rem 1rem;
-    border-top: 1px solid var(--line);
   }
 </style>

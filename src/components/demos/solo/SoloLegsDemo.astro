@@ -1,0 +1,105 @@
+---
+// Interactive self-collision avoidance demo on two planar 2-DoF legs, simulated in the page at 1 kHz
+// while the demo is on screen.
+import Demo from '../Demo.astro';
+
+const id = 'solo-legs';
+---
+
+<Demo data-demo={id}>
+  <div class="demo-bar">
+    <fieldset>
+      <legend class="label">Reference</legend>
+      <label><input type="radio" name={`${id}-mode`} value="swing" checked /> Crossing motion</label>
+      <label><input type="radio" name={`${id}-mode`} value="drag" /> Drag feet</label>
+    </fieldset>
+    <fieldset>
+      <legend class="label">Safety controller</legend>
+      <label><input type="checkbox" data-safety checked /> Enabled</label>
+    </fieldset>
+    <p class="demo-legend label">
+      <span><span class="swatch swatch-ref"></span>Reference</span>
+      <span><span class="swatch swatch-margin"></span>Safety margin</span>
+      <span><span class="swatch swatch-dist"></span>Closest pair</span>
+    </p>
+  </div>
+  <div class="demo-stage">
+    <canvas
+      data-scene
+      aria-label="Side view of the front and hind left legs of a quadruped, drawn as capsules. Drag near a foot to move its target; the safety controller keeps the legs apart."
+    ></canvas>
+    <canvas data-plot aria-label="Minimum distance between the legs over the last seconds."></canvas>
+    <p class="demo-status label" data-status></p>
+  </div>
+  <div class="demo-bar">
+    <label class="demo-slider">
+      <span class="label">Activation distance</span>
+      <input id={`${id}-d0`} type="range" min="0.01" max="0.08" step="0.005" value="0.04" data-param="threshold" />
+      <output for={`${id}-d0`}>4.0 cm</output>
+    </label>
+    <label class="demo-slider">
+      <span class="label">Repulsion stiffness k</span>
+      <input id={`${id}-k`} type="range" min="200" max="3000" step="100" value="1000" data-param="stiffness" />
+      <output for={`${id}-k`}>1000 N/m</output>
+    </label>
+    <div class="demo-actions">
+      <button type="button" data-action="reset">Reset</button>
+    </div>
+  </div>
+  <figcaption class="demo-caption">
+    <span class="label" data-stats></span>
+    <span class="label">Planar SOLO left legs · capsule radius 1.5 cm · 1 kHz loop</span>
+  </figcaption>
+</Demo>
+
+<script>
+  import { mountWhenVisible } from '../mountWhenVisible';
+  import { mountSoloDemo } from './client';
+
+  mountWhenVisible('[data-demo="solo-legs"]', mountSoloDemo);
+</script>
+
+<style>
+  canvas[data-scene] {
+    cursor: grab;
+  }
+  canvas[data-scene]:active {
+    cursor: grabbing;
+  }
+  canvas[data-plot] {
+    border-top: 1px dashed var(--line);
+  }
+  .demo-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.9rem;
+    margin: 0 0 0 auto;
+  }
+  .demo-legend > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  .swatch {
+    display: inline-block;
+    width: 0.9rem;
+    height: 0;
+    border-top: 2px solid;
+  }
+  .swatch-ref {
+    border-color: var(--muted);
+    border-top-style: dashed;
+    border-top-width: 1px;
+  }
+  .swatch-margin {
+    height: 0.6rem;
+    border: 0;
+    border-radius: 0.3rem;
+    background: var(--accent);
+    opacity: 0.25;
+  }
+  .swatch-dist {
+    border-color: var(--accent);
+    border-top-style: dotted;
+  }
+</style>

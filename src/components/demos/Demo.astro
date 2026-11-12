@@ -1,0 +1,124 @@
+---
+// Shared frame for interactive demos: toolbars (.demo-bar), canvas stage (.demo-stage, .demo-status),
+// sliders (.demo-slider), buttons (.demo-actions) and caption (.demo-caption). Content is slotted, so
+// the control styles are declared with :global() under the scoped .demo root.
+import type { HTMLAttributes } from 'astro/types';
+
+type Props = HTMLAttributes<'figure'>;
+const { class: className, ...rest } = Astro.props;
+---
+
+<figure class:list={['demo', 'frame', className]} {...rest}><slot /></figure>
+
+<style>
+  .demo {
+    margin: 1.5rem 0 2rem;
+    padding: 0;
+  }
+  .demo :global(.demo-bar) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+    align-items: end;
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+  }
+  .demo :global(.demo-bar:first-child) {
+    border-bottom: 1px solid var(--line);
+  }
+  .demo :global(.demo-stage + .demo-bar) {
+    border-top: 1px solid var(--line);
+  }
+  .demo :global(fieldset) {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.9rem;
+  }
+  .demo :global(legend) {
+    float: left;
+    width: 100%;
+    margin-bottom: 0.25rem;
+  }
+  .demo :global(label) {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    cursor: pointer;
+  }
+  .demo :global(input[type='radio']),
+  .demo :global(input[type='checkbox']),
+  .demo :global(input[type='range']) {
+    accent-color: var(--accent);
+    margin: 0;
+  }
+  .demo :global(.demo-stage) {
+    position: relative;
+  }
+  .demo :global(canvas) {
+    display: block;
+    width: 100%;
+    touch-action: none;
+  }
+  .demo :global(.demo-status) {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    margin: 0;
+    padding: 0.15rem 0.5rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+  }
+  .demo :global(.demo-status:empty) {
+    display: none;
+  }
+  .demo :global(.demo-slider) {
+    display: grid;
+    grid-template-columns: auto auto;
+    column-gap: 0.6rem;
+    cursor: default;
+  }
+  .demo :global(.demo-slider .label) {
+    grid-column: 1 / -1;
+  }
+  .demo :global(output) {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    min-width: 3.5em;
+  }
+  .demo :global(.demo-actions) {
+    display: flex;
+    gap: 0.5rem;
+    margin-left: auto;
+  }
+  .demo :global(button) {
+    font: inherit;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--fg);
+    background: var(--surface);
+    border: 1px solid var(--line-strong);
+    padding: 0.3rem 0.7rem;
+    cursor: pointer;
+  }
+  .demo :global(button:hover:enabled) {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .demo :global(button:disabled) {
+    opacity: 0.4;
+    cursor: default;
+  }
+  .demo :global(.demo-caption) {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.25rem 1rem;
+    padding: 0.5rem 1rem;
+    border-top: 1px solid var(--line);
+  }
+</style>
