@@ -234,6 +234,10 @@ hr { border: 0; border-top: 1px dashed var(--line); margin: 2rem 0; }
 }
 .citation p { margin: 0; }
 .citation .label { margin-bottom: 0.4rem; }
+.citation .doi { margin-top: 0.4rem; }
+.citation details { margin-top: 0.8rem; }
+.citation summary { cursor: pointer; margin-bottom: 0; }
+.citation pre { margin: 0.5rem 0 0; white-space: pre; }
 
 .part-of { margin: -0.5rem 0 1.5rem; }
 .part-of a { color: var(--fg); }

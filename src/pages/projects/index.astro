@@ -6,7 +6,7 @@ import { getProjects } from '../../lib/content';
 const projects = await getProjects();
 ---
 
-<Base title="Projects" description="Robotics projects by Thibault Noël: autonomous exploration, legged robot safety, space robotics simulation.">
+<Base title="Projects" description="Robotics projects by Thibault Noël: GNSS-denied UAV localisation, autonomous exploration, legged robot safety, space robotics simulation.">
   <h1>Projects</h1>
   <div class="card-grid">
     {projects.map((project) => <ProjectCard project={project} />)}

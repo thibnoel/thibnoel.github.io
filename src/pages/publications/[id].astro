@@ -2,6 +2,7 @@
 import type { GetStaticPaths } from 'astro';
 import { render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import Video from '../../components/Video.astro';
 import { getProjectsForPublication, getPublications } from '../../lib/content';
 
 export const getStaticPaths = (async () => {
@@ -10,6 +11,7 @@ export const getStaticPaths = (async () => {
 }) satisfies GetStaticPaths;
 
 const { entry } = Astro.props;
+const { data } = entry;
 const { Content } = await render(entry);
 const projects = await getProjectsForPublication(entry);
 ---
@@ -24,9 +26,15 @@ const projects = await getProjectsForPublication(entry);
       </p>
     )}
     <Content />
+    {data.video && <Video {...data.video} />}
     <div class="citation">
       <p class="label">Recommended citation</p>
-      <p>{entry.data.citation}</p>
+      <p>{data.citation}</p>
+      {data.doi && <p class="doi">DOI: <a href={`https://doi.org/${data.doi}`}>{data.doi}</a></p>}
+      <details>
+        <summary class="label">BibTeX</summary>
+        <pre>{data.bibtex.trim()}</pre>
+      </details>
     </div>
   </article>
 </Base>

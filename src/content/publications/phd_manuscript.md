@@ -1,10 +1,22 @@
 ---
-title: "(PhD manuscript) Autonomous Exploration of an Unknown 3D Environment"
-category: other
+title: "Autonomous Exploration of an Unknown 3D Environment"
+category: thesis
 excerpt: 'This manuscript investigates the problem of robotic autonomous exploration in 3D environments.'
 date: 2025-01-24
 venue: 'HAL open-science archive'
 citation: 'T. Noël, "Autonomous exploration of an unknown 3D environment". Robotics [cs.RO]. Université de Rennes, 2025. English. ⟨NNT : 2025URENS005⟩. ⟨tel-05127636⟩'
+bibtex: |
+  @phdthesis{noel2025exploration,
+    author = {No{\"e}l, Thibault},
+    title  = {Autonomous Exploration of an Unknown 3D Environment},
+    school = {Universit{\'e} de Rennes},
+    year   = {2025},
+    number = {2025URENS005},
+    url    = {https://theses.hal.science/tel-05127636}
+  }
+video:
+  title: PhD defense recording
+  youtube: nihoO_knoOc
 tags:
     - "path-planning"
     - "exploration"
@@ -16,6 +28,3 @@ tags:
 In this work, we focus on those planning aspects, developing various combinations of environment representations and planning strategies to improve the exploration performance of the robot. More precisely, we relied on standard mapping algorithms to provide a geometrical representation of the environment. The core of our work consisted in exploiting this map to derive efficient navigation roadmaps and exploration strategies, taking into account the safety requirements imposed by the environment while ensuring high-quality observations even for directional sensors. Our methods are evaluated extensively in realistic simulation environments and deployed on a ground mobile robot with various range sensors in multiple real-world experiments.
 
 **PDF**: [HAL](https://theses.hal.science/tel-05127636/)
-
-**Defense Recording**: 
-<iframe width="640" height="390" src="https://www.youtube.com/embed/nihoO_knoOc?si=cyB26G4oBw7HubOe" frameborder="0" allowfullscreen></iframe>

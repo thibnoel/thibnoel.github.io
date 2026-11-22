@@ -18,8 +18,9 @@ export const SITE = {
 } as const;
 
 export const PUBLICATION_CATEGORIES = {
-  manuscripts: 'Journal Papers',
+  journals: 'Journal Papers',
   conferences: 'Conference Papers',
+  thesis: 'Thesis',
   books: 'Books',
   other: 'Other',
 } as const;

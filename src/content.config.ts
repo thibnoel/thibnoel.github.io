@@ -14,9 +14,16 @@ const publications = defineCollection({
     title: z.string(),
     category: z.enum(categories),
     excerpt: z.string(),
+    // Publication date: issue date (journals), first conference day (conferences), defense date (theses).
     date: z.coerce.date(),
     venue: z.string(),
     citation: z.string(),
+    bibtex: z.string(),
+    doi: z.string().optional(),
+    video: z
+      .object({ title: z.string(), youtube: z.string().optional(), src: z.url().optional() })
+      .refine((v) => !!v.youtube !== !!v.src, 'pass exactly one of `youtube` or `src`')
+      .optional(),
     tags: z.array(z.string()).default([]),
   }),
 });
