@@ -45,6 +45,9 @@ const projects = defineCollection({
       role: z.string(),
       cover: image().optional(),
       coverAlt: z.string().optional(),
+      // Card image on project lists; falls back to `cover`.
+      preview: image().optional(),
+      previewAlt: z.string().optional(),
       skills: z.array(z.string()).default([]),
       publications: z.array(reference('publications')).default([]),
       featured: z.boolean().default(false),

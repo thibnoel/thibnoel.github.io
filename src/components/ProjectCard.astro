@@ -7,12 +7,13 @@ interface Props {
 }
 
 const { id, data } = Astro.props.project;
+const media = data.preview ? { src: data.preview, alt: data.previewAlt } : data.cover && { src: data.cover, alt: data.coverAlt };
 ---
 
 <a class="card" href={`/projects/${id}/`}>
   <div class="card-media">
-    {data.cover ? (
-      <Image src={data.cover} alt={data.coverAlt ?? ''} widths={[400, 800]} sizes="(max-width: 52rem) 100vw, 400px" />
+    {media ? (
+      <Image src={media.src} alt={media.alt ?? ''} widths={[400, 800]} sizes="(max-width: 52rem) 100vw, 400px" />
     ) : (
       <span class="card-media-empty label">{data.organisation}</span>
     )}
